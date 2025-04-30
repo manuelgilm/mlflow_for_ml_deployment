@@ -1,9 +1,9 @@
 import mlflow
-from utils.decorators import set_tracking_uri
+from utils.decorators import mlflow_tracking_uri
 from batch_inference.iris_classifier.processing import get_train_test_data
 
 
-@set_tracking_uri
+@mlflow_tracking_uri
 def main():
     """
     Main function to run the batch inference process.
