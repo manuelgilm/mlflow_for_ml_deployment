@@ -15,10 +15,13 @@ mlflow = "^2.22.0"
 scikit-learn = "^1.6.1"
 ipython = "^9.2.0"
 notebook = "^7.4.1"
+keras = "^3.9.2"
 
 [tool.poetry.scripts]
 iris_clf_train ="batch_inference.iris_classifier.train:main"
 iris_clf_inference = "batch_inference.iris_classifier.inference:main"
+
+digit_recog_test = "batch_inference.digit_recognition.data:main"
 
 
 [build-system]
