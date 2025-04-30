@@ -29,6 +29,7 @@ def get_train_test_data(
     )
     return X_train, X_test, y_train, y_test
 
+
 def transform_to_image(x: pd.DataFrame) -> pd.DataFrame:
     """
     Transform the input DataFrame into a 3D array representing images.
@@ -39,6 +40,7 @@ def transform_to_image(x: pd.DataFrame) -> pd.DataFrame:
     x = x.values.reshape(-1, 28, 28, 1)
     return x.astype("float32")
 
+
 def main() -> None:
     """
     Main function to run the data preparation process.
@@ -46,8 +48,7 @@ def main() -> None:
     # Load the dataset and split it into training and testing sets
     X_train, X_test, y_train, y_test = get_train_test_data()
     x = transform_to_image(X_train)
-    
-    
+
     # Print the shapes of the datasets
     # print(f"X_train shape: {X_train.shape}")
     # print(f"X_test shape: {X_test.shape}")
