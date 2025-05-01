@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "mlflow-for-ml-deployment"
+version = "0.1.0"
+description = ""
+authors = ["Manuel Gil <manuelgilsitio@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "utils", format = ["sdist", "wheel"] },
+    { include = "usecases", format = ["sdist", "wheel"]}
+]
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+mlflow = "^2.22.0"
+scikit-learn = "^1.6.1"
+ipython = "^9.2.0"
+notebook = "^7.4.1"
+keras = "^3.9.2"
+tensorflow-io-gcs-filesystem = "0.31.0"
+tensorflow = "2.19.0"
+
+[tool.poetry.scripts]
+iris_clf_train ="usecases.iris_classifier.train:main"
+iris_clf_inference = "usecases.iris_classifier.inference:main"
+
+digit_recog_test = "usecases.digit_recognition.data:main"
+digit_recog_train = "usecases.digit_recognition.train:main"
+digit_recog_inference = "usecases.digit_recognition.inference:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
