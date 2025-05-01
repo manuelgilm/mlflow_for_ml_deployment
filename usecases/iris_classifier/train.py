@@ -1,5 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
-from batch_inference.iris_classifier.data import get_train_test_data
+from usecases.iris_classifier.data import get_train_test_data
 from utils.decorators import mlflow_tracking_uri
 from utils.decorators import mlflow_client
 from utils.decorators import mlflow_experiment
@@ -24,10 +24,7 @@ def train(x_train, y_train, params: Optional[Dict[str, str]]) -> RandomForestCla
 
 
 @mlflow_tracking_uri
-@mlflow_experiment(
-    name="iris_classifier",
-    tags={"topic": "batch_inference", "level": "basic"},
-)
+@mlflow_experiment(name="iris_classifier")
 @mlflow_client
 def main(**kwargs) -> None:
     # Example usage of the train function

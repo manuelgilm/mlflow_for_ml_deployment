@@ -1,18 +1,16 @@
 from utils.decorators import mlflow_tracking_uri
 from utils.decorators import mlflow_client
 from utils.decorators import mlflow_experiment
-from batch_inference.digit_recognition.data import get_train_test_data
-from batch_inference.digit_recognition.cnn_utils import get_image_processor
-from batch_inference.digit_recognition.data import transform_to_image
+from usecases.digit_recognition.utils import get_model_signature
+from usecases.digit_recognition.utils import get_image_processor
+from usecases.digit_recognition.data import get_train_test_data
+from usecases.digit_recognition.data import transform_to_image
 import keras
 import mlflow
 
 
 @mlflow_tracking_uri
-@mlflow_experiment(
-    name="digit_recognition",
-    tags={"topic": "batch_inference", "level": "basic"},
-)
+@mlflow_experiment(name="digit_recognition")
 @mlflow_client
 def main(**kwargs) -> None:
     """ """
@@ -34,7 +32,7 @@ def main(**kwargs) -> None:
     )
 
     callbacks = [mlflow.keras.MlflowCallback()]
-
+    model_signature = get_model_signature()
     with mlflow.start_run() as run:
         model.fit(
             x={input_name: x_train},
@@ -51,6 +49,7 @@ def main(**kwargs) -> None:
         mlflow.keras.log_model(
             model,
             artifact_path="model",
+            signature=model_signature,
             registered_model_name=registered_model_name,
         )
 

@@ -6,8 +6,8 @@ authors = ["Manuel Gil <manuelgilsitio@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-    { include = "batch_inference", format = ["sdist", "wheel"] },
     { include = "utils", format = ["sdist", "wheel"] },
+    { include = "usecases", format = ["sdist", "wheel"]}
 ]
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
@@ -20,11 +20,12 @@ tensorflow-io-gcs-filesystem = "0.31.0"
 tensorflow = "2.19.0"
 
 [tool.poetry.scripts]
-iris_clf_train ="batch_inference.iris_classifier.train:main"
-iris_clf_inference = "batch_inference.iris_classifier.inference:main"
+iris_clf_train ="usecases.iris_classifier.train:main"
+iris_clf_inference = "usecases.iris_classifier.inference:main"
 
-digit_recog_test = "batch_inference.digit_recognition.data:main"
-digit_recog_train = "batch_inference.digit_recognition.train:main"
+digit_recog_test = "usecases.digit_recognition.data:main"
+digit_recog_train = "usecases.digit_recognition.train:main"
+digit_recog_inference = "usecases.digit_recognition.inference:main"
 
 [build-system]
 requires = ["poetry-core"]

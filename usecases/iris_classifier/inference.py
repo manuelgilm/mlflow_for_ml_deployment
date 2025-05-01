@@ -1,6 +1,6 @@
 import mlflow
 from utils.decorators import mlflow_tracking_uri
-from batch_inference.iris_classifier.data import get_train_test_data
+from usecases.iris_classifier.data import get_train_test_data
 
 
 @mlflow_tracking_uri

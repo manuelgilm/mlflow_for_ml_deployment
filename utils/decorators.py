@@ -2,8 +2,11 @@ from utils.folder import get_project_root
 from utils.mlflow_exp import get_or_create_experiment
 import mlflow
 
+from typing import Optional
+from typing import Dict
 
-def mlflow_experiment(name: str, tags: dict):
+
+def mlflow_experiment(name: str, tags: Optional[Dict[str, str]] = None):
     """
     Decorator to set the MLflow experiment name and tags.
     This decorator creates a new experiment if it doesn't exist.
