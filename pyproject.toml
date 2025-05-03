@@ -18,14 +18,17 @@ notebook = "^7.4.1"
 keras = "^3.9.2"
 tensorflow-io-gcs-filesystem = "0.31.0"
 tensorflow = "2.19.0"
+httpx = "^0.28.1"
 
 [tool.poetry.scripts]
 iris_clf_train ="usecases.iris_classifier.train:main"
 iris_clf_inference = "usecases.iris_classifier.inference:main"
+iris_clf_online_inference="usecases.iris_classifier.online_inference:main"
 
 digit_recog_test = "usecases.digit_recognition.data:main"
 digit_recog_train = "usecases.digit_recognition.train:main"
 digit_recog_inference = "usecases.digit_recognition.inference:main"
+digit_recog_online_inference = "usecases.digit_recognition.online_inference:main"
 
 [build-system]
 requires = ["poetry-core"]
