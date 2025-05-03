@@ -6,6 +6,8 @@ from usecases.digit_recognition.data import transform_to_image
 import pandas as pd
 
 
+# command to run the model server
+# poetry run mlflow models serve -m models:/Iris_Classifier_Model@production --no-conda
 @mlflow_tracking_uri
 def main():
     """
@@ -17,7 +19,7 @@ def main():
     registered_model_name = "Digit_Recognition_Model"
     model_path = f"models:/{registered_model_name}@production"
     model = mlflow.pyfunc.load_model(model_path)
-    pred = model.predict({"image_input":x_test})
+    pred = model.predict({"image_input": x_test})
     # Perform inference on the test data
     predictions = np.argmax(pred, axis=-1)
     print(predictions)
