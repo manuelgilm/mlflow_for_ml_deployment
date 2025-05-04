@@ -22,16 +22,13 @@ def main() -> dict:
     x_test = transform_to_image(x_test)
 
     url = "http://127.0.0.1:5000/invocations"
-    n_samples = 10
-    samples = x_test[0:n_samples].reshape(-1, 28, 28, 1)
-
-
-    print(samples.shape)
+    n_samples = 1
+    samples = x_test[0:n_samples]
+    
     payload = {
         "instances": {
             "image_input":samples.tolist()},
     }
-    print(payload)
     headers = {"Content-Type": "application/json"}
     response = httpx.post(url, data=json.dumps(payload), headers=headers)
 
