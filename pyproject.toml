@@ -33,6 +33,10 @@ digit_recog_train = "usecases.digit_recognition.train:main"
 digit_recog_inference = "usecases.digit_recognition.inference:main"
 digit_recog_online_inference = "usecases.digit_recognition.online_inference:main"
 
+diabetes_pred_train = "usecases.diabetes_prediction.train:main"
+diabetes_pred_inference = "usecases.diabetes_prediction.inference:main"
+diabetes_pred_online_inferece = "usecases.diabetes_prediction.online_inference:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

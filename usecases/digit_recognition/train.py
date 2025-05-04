@@ -8,6 +8,7 @@ from usecases.digit_recognition.data import transform_to_image
 import keras
 import mlflow
 
+
 @mlflow_tracking_uri
 @mlflow_experiment(name="digit_recognition")
 @mlflow_client

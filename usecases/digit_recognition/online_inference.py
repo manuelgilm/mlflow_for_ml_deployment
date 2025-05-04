@@ -7,6 +7,7 @@ import pickle
 import base64
 import numpy as np
 
+
 def main() -> dict:
     """
     Perform online inference using a REST API.
@@ -24,18 +25,17 @@ def main() -> dict:
     url = "http://127.0.0.1:5000/invocations"
     n_samples = 1
     samples = x_test[0:n_samples]
-    
+
     payload = {
-        "instances": {
-            "image_input":samples.tolist()},
+        "instances": {"image_input": samples.tolist()},
     }
     headers = {"Content-Type": "application/json"}
     response = httpx.post(url, data=json.dumps(payload), headers=headers)
 
     if response.status_code == 200:
         predictions = response.json().get("predictions")
-        pred = np.argmax(predictions, axis=-1)  
+        pred = np.argmax(predictions, axis=-1)
         print(pd.DataFrame({"predictions": pred, "y_test": y_test[0:n_samples]}))
-        return 
+        return
     else:
         raise Exception(f"Error: {response.status_code} - {response.text}")
