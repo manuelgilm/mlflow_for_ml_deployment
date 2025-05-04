@@ -5,6 +5,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from typing import List
+from typing import Optional
+from typing import Dict
+import pandas as pd
 
 
 class DiabetesPrediction(mlflow.pyfunc.PythonModel):
@@ -37,7 +40,7 @@ class DiabetesPrediction(mlflow.pyfunc.PythonModel):
         # train the model
         self.model = pipeline.fit(x_train, y_train)
 
-    def predict(self, context, model_input):
+    def predict(self, context, model_input, params: Optional[Dict[str, str]] = {}):
         """
         Predict method for the custom model.
         This method is called when making predictions with the model.
@@ -50,7 +53,41 @@ class DiabetesPrediction(mlflow.pyfunc.PythonModel):
             print("Model not loaded")
             return None
 
-        return self.model.predict(model_input)
+        if params.get("probabilities", None):
+            predictions_df = self._predict_with_probabilities(model_input)
+            return predictions_df
+
+        predictions = self.model.predict(model_input)
+        # Convert predictions to DataFrame for better readability
+        predictions_df = pd.DataFrame({"predictions": predictions})
+
+        return predictions_df
+
+    def _predict_with_probabilities(self, model_input):
+        """
+        Predict method for the custom model with probabilities.
+        This method is called when making predictions with the model.
+
+        :param model_input: The input data for prediction.
+        :return: The predicted output with probabilities.
+        """
+        if not self.model:
+            print("Model not loaded")
+            return None
+
+        # Get the probabilities of each class
+        probabilities = self.model.predict_proba(model_input)
+
+        # Convert predictions to DataFrame for better readability
+        predictions_df = pd.DataFrame(
+            {
+                "predictions": self.model.predict(model_input),
+                "prob_0": probabilities[:, 0],
+                "prob_1": probabilities[:, 1],
+            }
+        )
+
+        return predictions_df
 
     def _get_numerical_features(self):
         """

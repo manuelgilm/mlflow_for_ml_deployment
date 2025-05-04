@@ -9,11 +9,13 @@ def main(**kwargs) -> None:
     registered_model_name = "Diabetes_Prediction_Model"
     model_uri = f"models:/{registered_model_name}@production"
     model = mlflow.pyfunc.load_model(model_uri=model_uri)
-    # Load the model and make predictions
-    unwrapped_model = model.unwrap_python_model()
-    print(type(model))
-    print(type(unwrapped_model))
-    categorical_features = unwrapped_model._get_categorical_features()
-    print(categorical_features)
+    predictions_with_probs = model.predict(x_test, params={"probabilities": False})
+    print(predictions_with_probs.head())
+    # # Load the model and make predictions
+    # unwrapped_model = model.unwrap_python_model()
+    # print(type(model))
+    # print(type(unwrapped_model))
+    # categorical_features = unwrapped_model._get_categorical_features()
+    # print(categorical_features)
     # predictions = model.predict(x_test)
     # print(predictions)
