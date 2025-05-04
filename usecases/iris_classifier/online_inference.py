@@ -41,7 +41,7 @@ def main() -> None:
     Perform online inference using a REST API.
     """
     payload, labels = get_payload(10)
-    url = "http://127.0.0.1:5000/invocations"
+    url = "http://127.0.0.1:5001/invocations"
     response = httpx.get(url)
     print(response.status_code)
     print(response.text)
