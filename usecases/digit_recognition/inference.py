@@ -7,8 +7,8 @@ import pandas as pd
 
 
 # command to run the model server
-# poetry run mlflow models serve -m models:/Iris_Classifier_Model@production --no-conda
-@mlflow_tracking_uri
+# poetry run mlflow models serve -m models:/Digit_Recognition_Model@production --no-conda
+@mlflow_tracking_uri 
 def main():
     """
     Main function to run the batch inference process.

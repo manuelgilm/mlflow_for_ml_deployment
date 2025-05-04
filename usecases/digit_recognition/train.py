@@ -8,13 +8,11 @@ from usecases.digit_recognition.data import transform_to_image
 import keras
 import mlflow
 
-
 @mlflow_tracking_uri
 @mlflow_experiment(name="digit_recognition")
 @mlflow_client
 def main(**kwargs) -> None:
     """ """
-
     x_train, x_test, y_train, y_test = get_train_test_data()
     x_train = transform_to_image(x_train)
     x_test = transform_to_image(x_test)

@@ -19,6 +19,9 @@ keras = "^3.9.2"
 tensorflow-io-gcs-filesystem = "0.31.0"
 tensorflow = "2.19.0"
 httpx = "^0.28.1"
+azure-storage-blob = "^12.25.1"
+azure-identity = "^1.21.0"
+python-dotenv = "^1.1.0"
 
 [tool.poetry.scripts]
 iris_clf_train ="usecases.iris_classifier.train:main"
