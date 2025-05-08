@@ -25,6 +25,7 @@ python-dotenv = "^1.1.0"
 
 [tool.poetry.scripts]
 iris_clf_train ="usecases.iris_classifier.train:main"
+iris_clf_validate = "usecases.iris_classifier.inference:validate_model"
 iris_clf_inference = "usecases.iris_classifier.inference:main"
 iris_clf_online_inference="usecases.iris_classifier.online_inference:main"
 
