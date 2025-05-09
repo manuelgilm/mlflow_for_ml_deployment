@@ -2,6 +2,7 @@ import mlflow
 from utils.decorators import mlflow_tracking_uri
 from usecases.iris_classifier.data import get_train_test_data
 
+
 @mlflow_tracking_uri
 def validate_model():
     """
@@ -17,6 +18,7 @@ def validate_model():
         input_data=x_test,
         env_manager="local",
     )
+
 
 @mlflow_tracking_uri
 def main():
