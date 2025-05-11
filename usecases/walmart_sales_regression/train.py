@@ -1,8 +1,18 @@
 from usecases.walmart_sales_regression.data import SalesDataProcessor
 from usecases.walmart_sales_regression.base import WalmartSalesRegressor
+from utils.decorators import mlflow_tracking_uri
+from utils.decorators import mlflow_client
+from utils.decorators import mlflow_experiment
+import mlflow 
 
-
-def main():
+@mlflow_tracking_uri
+@mlflow_experiment(name="walmart_sales_regression")
+@mlflow_client
+def main(**kwargs):
+    """
+    Train the Walmart sales regression model.
+    """
+    registered_model_name = "walmart-store-sales-regressor"
     data_path = "../../Downloads/sales-walmart/Walmart_Sales.csv"
     data_processor = SalesDataProcessor(path=data_path)
     x_train, x_test, y_train, y_test = data_processor.create_train_test_split()
@@ -16,5 +26,36 @@ def main():
     y_test = y_test[y_test["Store"].isin([1, 2, 3])]
 
     store_sales_regressor = WalmartSalesRegressor()
-    store_sales_regressor.fit_models(x_train, y_train)
-    print("Models fitted successfully.")
+
+    with mlflow.start_run(run_name="walmart-sales-regressors") as run:
+
+        for store_id in x_train["Store"].unique():
+            store_sales_regressor.fit_model(
+                x_train=x_train,
+                y_train=y_train,
+                store_id=store_id,
+                parent_run_id=run.info.run_id,
+            )
+
+        # Log the entire class as a model
+        signature = store_sales_regressor._get_model_signature()
+        mlflow.pyfunc.log_model(
+            artifact_path="store-sales-regressor",
+            python_model=store_sales_regressor,
+            registered_model_name=registered_model_name,
+            signature=signature,
+        )
+    
+        print("Models fitted successfully.")
+
+        # Set the model version alias to "production"
+        model_version = mlflow.search_model_versions(
+            filter_string=f"name='{registered_model_name}'",
+            max_results=1,
+        )[0]
+        client = kwargs["mlflow_client"]
+        client.set_registered_model_alias(
+            name=registered_model_name,
+            version=model_version.version,
+            alias="production",
+        )
