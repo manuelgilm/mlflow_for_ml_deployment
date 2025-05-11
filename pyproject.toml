@@ -22,9 +22,11 @@ httpx = "^0.28.1"
 azure-storage-blob = "^12.25.1"
 azure-identity = "^1.21.0"
 python-dotenv = "^1.1.0"
+jupyter = "^1.1.1"
 
 [tool.poetry.scripts]
 iris_clf_train ="usecases.iris_classifier.train:main"
+iris_clf_validate = "usecases.iris_classifier.inference:validate_model"
 iris_clf_inference = "usecases.iris_classifier.inference:main"
 iris_clf_online_inference="usecases.iris_classifier.online_inference:main"
 
@@ -36,6 +38,9 @@ digit_recog_online_inference = "usecases.digit_recognition.online_inference:main
 diabetes_pred_train = "usecases.diabetes_prediction.train:main"
 diabetes_pred_inference = "usecases.diabetes_prediction.inference:main"
 diabetes_pred_online_inferece = "usecases.diabetes_prediction.online_inference:main"
+
+walmart_reg_train = "usecases.walmart_sales_regression.train:main"
+walmart_reg_online_inference = "usecases.walmart_sales_regression.online_inference:main"
 
 [build-system]
 requires = ["poetry-core"]
