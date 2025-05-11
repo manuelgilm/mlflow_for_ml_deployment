@@ -39,6 +39,8 @@ diabetes_pred_train = "usecases.diabetes_prediction.train:main"
 diabetes_pred_inference = "usecases.diabetes_prediction.inference:main"
 diabetes_pred_online_inferece = "usecases.diabetes_prediction.online_inference:main"
 
+walmart_reg_train = "usecases.walmart_sales_regression.train:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

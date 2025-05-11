@@ -2,6 +2,8 @@ from pathlib import Path
 from typing import Optional
 from typing import Union
 import pandas as pd
+from typing import Tuple
+from sklearn.model_selection import train_test_split
 
 
 class SalesDataProcessor:
@@ -27,25 +29,27 @@ class SalesDataProcessor:
         self.df = pd.read_csv(path)
         self.data = self.df.copy()
 
-    def create_train_test_data(
-        self, store_id: Optional[int] = None, test_size: Optional[float] = 0.2
-    ) -> None:
+    def create_train_test_split(self, test_size: float = 0.2) -> Tuple:
         """
-        Create training and testing data from the loaded dataset.
-        If store_id is provided, filter the data for that store.
+        Splits the DataFrame into a training and testing set.
+
+        :param test_size: The proportion of the dataset to include in the test split.
+        :return: Tuple containing the training and testing sets.
         """
-        sales_data = self.data.copy()
-        sales_data["Date"] = pd.to_datetime(sales_data["Date"])
-        sales_data.groupby("Store")["Weekly_Sales"].sum().reset_index()
-        self.store_sales = {}
-        self.store_sales[store_id] = (
-            self.data[self.data["Store"] == store_id][["Weekly_Sales", "Date"]]
-            .groupby("Date")
-            .sum()
+        df = self.data.copy()
+        numerical_features = ["Holiday_Flag"]
+        categorical_features = ["Temperature", "Fuel_Price", "CPI", "Unemployment"]
+        target = "Weekly_Sales"
+
+        # drop date
+        df = df.drop(columns=["Date"])
+
+        X = df[["Store"] + numerical_features + categorical_features]
+        y = df[["Store"] + [target]]
+
+        # Split the data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=42
         )
 
-    def preprocess(self):
-        # Example preprocessing steps
-        self.data["Date"] = pd.to_datetime(self.data["Date"])
-        self.data["Sales"] = self.data["Sales"].astype(float)
-        return self.data
+        return X_train, X_test, y_train, y_test
