@@ -3,7 +3,8 @@ from usecases.walmart_sales_regression.base import WalmartSalesRegressor
 from utils.decorators import mlflow_tracking_uri
 from utils.decorators import mlflow_client
 from utils.decorators import mlflow_experiment
-import mlflow 
+import mlflow
+
 
 @mlflow_tracking_uri
 @mlflow_experiment(name="walmart_sales_regression")
@@ -34,7 +35,7 @@ def main(**kwargs):
                 x_train=x_train,
                 y_train=y_train,
                 store_id=store_id,
-                parent_run_id=run.info.run_id,
+                run_id=run.info.run_id,
             )
 
         # Log the entire class as a model
@@ -45,7 +46,7 @@ def main(**kwargs):
             registered_model_name=registered_model_name,
             signature=signature,
         )
-    
+
         print("Models fitted successfully.")
 
         # Set the model version alias to "production"
@@ -54,6 +55,8 @@ def main(**kwargs):
             max_results=1,
         )[0]
         client = kwargs["mlflow_client"]
+        print(f"Model version: {model_version.version}")
+        print(f"Model name: {model_version.name}")
         client.set_registered_model_alias(
             name=registered_model_name,
             version=model_version.version,

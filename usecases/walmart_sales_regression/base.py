@@ -13,37 +13,6 @@ from sklearn.impute import SimpleImputer
 from typing import List
 
 
-
-class CustomMLflowModel(mlflow.pyfunc.PythonModel):
-    """ """
-
-    def __init__(self, model_path: str):
-        """
-        Initialize the CustomMLflowModel with the path to the model.
-
-        :param model_path: Path to the MLflow model.
-        """
-        self.model_path = model_path
-
-    def load_context(self, context):
-        """
-        Load the model from the specified path.
-
-        :param context: The context object containing the model path.
-        """
-        self.model = mlflow.pyfunc.load_model(self.model_path)
-
-    def predict(self, context, model_input):
-        """
-        Perform prediction using the loaded model.
-
-        :param context: The context object containing the model.
-        :param model_input: Input data for prediction.
-        :return: Predicted values.
-        """
-        return self.model.predict(model_input)
-
-
 class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
     """
     Custom MLflow model for sales regression.
@@ -57,55 +26,15 @@ class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
         self.categorical_features = ["Temperature", "Fuel_Price", "CPI", "Unemployment"]
         self.artifact_uris = {}
 
-    # @mlflow_tracking_uri
-    # @mlflow_experiment(name="walmart_sales_regression")
-    # @mlflow_client
-    # def fit_models(self, x_train, y_train, **kwargs):
-    #     """
-    #     Fits multiple models to the training data.
-
-    #     :param x_train: Training features.
-    #     :param y_train: Training target variable.
-    #     """
-    #     with mlflow.start_run(run_name="walmart-sales-regressors") as run:
-
-    #         for store_id in x_train["Store"].unique():
-    #             self.fit_model(
-    #                 x_train=x_train,
-    #                 y_train=y_train,
-    #                 store_id=store_id,
-    #                 parent_run_id=run.info.run_id,
-    #             )
-    #     return run.info.run_id
-    #         # get the model signature
-    #         signature = self._get_model_signature()
-    #         # log the entire class as a model
-    #         mlflow.pyfunc.log_model(
-    #             artifact_path="walmart-store-sales-regressor",
-    #             python_model=self,
-    #             registered_model_name="walmart-store-sales-regressor",
-    #             signature=signature,
-    #         )
-
-    #         # set the model version alias to "production"
-    #         model_version = mlflow.search_model_versions(
-    #             filter_string="name='walmart-store-sales-regressor'",
-    #             max_results=1,
-    #         )[0]
-    #         client = kwargs["mlflow_client"]
-    #         client.set_registered_model_alias(
-    #             name="walmart-store-sales-regressor",
-    #             version=model_version.version,
-    #             alias="production",
-    #         )
-    
-    def fit_model(self, x_train, y_train, store_id: int, parent_run_id: str):
+    def fit_model(self, x_train, y_train, store_id: int, run_id: str):
         """
         Fits a single model to the training data for a specific store.
 
         :param x_train: Training features.
         :param y_train: Training target variable.
         :param store_id: The store ID for which to fit the model.
+        :param run_id: The ID of the parent MLflow run.
+        :return: None
         """
         store_data = x_train[x_train["Store"] == store_id]
         store_target = y_train[y_train["Store"] == store_id]
@@ -118,15 +47,17 @@ class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
         pipeline.fit(store_data, store_target)
 
         with mlflow.start_run(
-            run_name=f"run_store_{store_id}", parent_run_id=parent_run_id, nested=True
+            run_name=f"run_store_{store_id}", parent_run_id=run_id, nested=True
         ) as run:
             mlflow.sklearn.log_model(
                 sk_model=pipeline,
                 artifact_path=f"model_store_{store_id}",
             )
             mlflow.log_params({"store_id": store_id})
-            self.artifact_uris[store_id] = f"runs:/{run.info.run_id}/model_store_{store_id}"
-            
+            self.artifact_uris[store_id] = (
+                f"runs:/{run.info.run_id}/model_store_{store_id}"
+            )
+
     def _get_model_signature(self) -> ModelSignature:
         """
         Get the model signature for the MLflow model.
@@ -134,11 +65,11 @@ class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
         :return: Model signature object.
         """
         feature_specification = [
-            ColSpec(type="integer", name="Holiday_Flag"),
-            ColSpec(type="float", name="Temperature"),
-            ColSpec(type="float", name="Fuel_Price"),
-            ColSpec(type="float", name="CPI"),
-            ColSpec(type="float", name="Unemployment"),
+            ColSpec(type="long", name="Holiday_Flag"),
+            ColSpec(type="double", name="Temperature"),
+            ColSpec(type="double", name="Fuel_Price"),
+            ColSpec(type="double", name="CPI"),
+            ColSpec(type="double", name="Unemployment"),
         ]
 
         param_specification = [
@@ -161,7 +92,7 @@ class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
 
     def _get_sklearn_pipeline(
         self, numerical_features: List[str], categorical_features: List[str]
-    ):
+    ) -> Pipeline:
         """
         Get a scikit-learn pipeline for preprocessing and model training.
 
@@ -180,7 +111,7 @@ class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
         pipeline = Pipeline(
             steps=[
                 ("preprocessor", preprocessor),
-                ("model", RandomForestRegressor()),
+                ("model", RandomForestRegressor(n_estimators=100, random_state=42)),
             ]
         )
 
@@ -199,7 +130,7 @@ class WalmartSalesRegressor(mlflow.pyfunc.PythonModel):
             store_id = params.get("store_id", 1)
             if store_id not in self.artifact_uris.keys():
                 raise ValueError(f"Model for store ID {store_id} not found.")
-            return self._predict(store_id, x)
+            return self._predict(store_id, model_input)
         else:
             raise ValueError("Store ID must be provided in params.")
 
