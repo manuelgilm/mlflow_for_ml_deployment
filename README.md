@@ -30,6 +30,11 @@ This use case illustrates the basic components of the inference process. It serv
 * diabetes_pred_inference
 * diabetes_pred_online_inferece
 
+### Walmart Store Sales Regression
+
+* walmart_reg_train
+* walmart_reg_online_inference
+
 ## Build Docker image for MLflow model
 
 ### Handwritten Digit Recognition usecase.
