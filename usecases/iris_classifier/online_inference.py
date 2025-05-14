@@ -39,9 +39,13 @@ def get_payload(samples: int) -> dict:
 def main() -> None:
     """
     Perform online inference using a REST API.
+
+    To deploy the model in the local server, run the following command:
+    `poetry run mlflow models serve -m models:/Iris_Classifier_Model@production --no-conda`
+
     """
     payload, labels = get_payload(10)
-    url = "http://127.0.0.1:5001/invocations"
+    url = "http://127.0.0.1:5000/invocations"
     response = httpx.get(url)
     print(response.status_code)
     print(response.text)

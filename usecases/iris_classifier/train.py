@@ -46,7 +46,7 @@ def main(**kwargs) -> None:
             sk_model=model,
             artifact_path="model",
             signature=model_signature,
-            input_example=x_train.iloc[0:1],
+            input_example=x_train.iloc[0:3],
             registered_model_name=registered_model_name,
         )
 

@@ -23,6 +23,7 @@ azure-storage-blob = "^12.25.1"
 azure-identity = "^1.21.0"
 python-dotenv = "^1.1.0"
 jupyter = "^1.1.1"
+shap = "^0.47.2"
 
 [tool.poetry.scripts]
 iris_clf_train ="usecases.iris_classifier.train:main"
@@ -30,7 +31,7 @@ iris_clf_validate = "usecases.iris_classifier.inference:validate_model"
 iris_clf_inference = "usecases.iris_classifier.inference:main"
 iris_clf_online_inference="usecases.iris_classifier.online_inference:main"
 
-digit_recog_test = "usecases.digit_recognition.data:main"
+
 digit_recog_train = "usecases.digit_recognition.train:main"
 digit_recog_inference = "usecases.digit_recognition.inference:main"
 digit_recog_online_inference = "usecases.digit_recognition.online_inference:main"

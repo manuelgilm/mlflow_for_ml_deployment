@@ -38,7 +38,7 @@ def main(**kwargs) -> None:
             y=y_train,
             validation_data=({input_name: x_test}, y_test),
             batch_size=32,
-            epochs=10,
+            epochs=1,
             validation_split=0.2,
             callbacks=callbacks,
         )
