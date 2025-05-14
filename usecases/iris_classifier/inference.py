@@ -4,23 +4,6 @@ from usecases.iris_classifier.data import get_train_test_data
 
 
 @mlflow_tracking_uri
-def validate_model():
-    """
-    Validate the model by loading it and performing inference on test data.
-
-    """
-    _, x_test, _, _ = get_train_test_data()
-    registered_model_name = "Iris_Classifier_Model"
-    model_uri = f"models:/{registered_model_name}@production"
-
-    mlflow.models.predict(
-        model_uri=model_uri,
-        input_data=x_test,
-        env_manager="local",
-    )
-
-
-@mlflow_tracking_uri
 def main():
     """
     Main function to run the batch inference process.
